@@ -30,7 +30,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public ReviewResponse getReviews(Long productId, Long cursor, int size) {
         // 리뷰를 조회합니다. (최근 작성된 순으로)
-        List<Review> reviews = reviewRepository.findByProductIdOrderByCreatedAtDesc(productId);
+        List<Review> reviews = reviewRepository.findByProductIdOrderByIdDesc(productId);
 
         // 커서 기반 페이징 처리
         List<Review> pagedReviews = reviews.stream()

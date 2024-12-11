@@ -60,7 +60,7 @@ public class ReviewServiceTest {
     @Test
     @Rollback(false)
     void testReviewCount() {
-        List<Review> reviews = reviewRepository.findByProductId(productId);
+        List<Review> reviews = reviewRepository.findByProductIdOrderByIdDesc(productId);
         assertThat(reviews.size()).isEqualTo(2);
     }
 
