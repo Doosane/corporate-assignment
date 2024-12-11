@@ -7,12 +7,12 @@ import com.doosan.review.entity.Review;
 import com.doosan.review.repository.ProductRepository;
 import com.doosan.review.repository.ReviewRepository;
 import com.doosan.review.repository.S3Uploader;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -27,25 +27,23 @@ public class ReviewService {
         this.s3Uploader = s3Uploader;
     }
 
+
     @Transactional(readOnly = true)
     public ReviewResponse getReviews(Long productId, Long cursor, int size) {
-        // 리뷰를 조회합니다. (최근 작성된 순으로)
-        List<Review> reviews = reviewRepository.findByProductIdOrderByIdDesc(productId);
+        // 데이터베이스에서 커서 기반으로 페이징된 리뷰 목록 조회
+        List<Review> reviews = (cursor == null)
+                ? reviewRepository.findByProductIdOrderByIdDesc(productId, PageRequest.of(0, size))
+                : reviewRepository.findByProductIdAndIdLessThanOrderByIdDesc(productId, cursor, PageRequest.of(0, size));
 
-        // 커서 기반 페이징 처리
-        List<Review> pagedReviews = reviews.stream()
-                .skip(cursor != null ? cursor : 0)
-                .limit(size)
-                .collect(Collectors.toList());
+        // 총 리뷰 수 및 평균 점수 계산
+        long totalCount = reviewRepository.countByProductId(productId);
+        double averageScore = reviewRepository.calculateAverageScoreByProductId(productId);
 
-        // 총 리뷰 수와 평균 점수 계산
-        long totalCount = reviews.size();
-        double averageScore = reviews.stream().mapToInt(Review::getScore).average().orElse(0.0);
+        // 다음 요청에서 사용할 `cursor` 값 계산
+        Long newCursor = reviews.size() < size ? -1 : reviews.get(reviews.size() - 1).getId();
 
-        // 마지막 리뷰의 ID를 커서로 설정
-        long newCursor = pagedReviews.size() < size ? -1 : pagedReviews.get(pagedReviews.size() - 1).getId();
-
-        return new ReviewResponse(totalCount, averageScore, newCursor, pagedReviews);
+        // 응답 생성
+        return new ReviewResponse(totalCount, averageScore, newCursor, reviews);
     }
 
     @Transactional
@@ -61,7 +59,7 @@ public class ReviewService {
             throw new IllegalArgumentException("이미 해당 상품에 리뷰를 작성하셨습니다.");
         }
 
-        // 이미지 업로드 (dummy 구현체 사용)
+        // 이미지 업로드 dummy 구현체 사용
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
             imageUrl = s3Uploader.upload(image);

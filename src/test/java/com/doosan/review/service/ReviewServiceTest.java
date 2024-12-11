@@ -9,13 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @Rollback(false)
@@ -60,13 +62,16 @@ public class ReviewServiceTest {
     @Test
     @Rollback(false)
     void testReviewCount() {
-        List<Review> reviews = reviewRepository.findByProductIdOrderByIdDesc(productId);
+        // 쿼리를 위한 pageable 인스턴스 생성
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Review> reviews = reviewRepository.findByProductIdOrderByIdDesc(productId, pageable);
         assertThat(reviews.size()).isEqualTo(2);
     }
 
     @Test
     @Rollback(false)
     void testProductScore() {
+        // Product의 초기 점수 테스트
         Product product = productRepository.findById(productId).orElseThrow();
         assertThat(product.getScore()).isEqualTo(0.0f);
     }
