@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "review") // 소문자로 테이블 이름 매핑
+@Table(name = "review")
 @NoArgsConstructor
 public class Review {
 
@@ -37,12 +37,14 @@ public class Review {
     @Column(name = "image_url") // imageUrl 매핑
     private String imageUrl;
 
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "DATETIME(6) DEFAULT CURRENT_TIMESTAMP")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now(); // 삽입 시 현재 시간 자동 설정
+        if(this.createdAt == null) {
+            this.createdAt = LocalDateTime.now(); // 삽입 시 현재 시간 자동 설정
+        }
     }
 }
