@@ -2,8 +2,8 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-COPY build/libs/snapshot01.jar /app/snapshot01.jar
+COPY build/libs/review.jar /app/review.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/snapshot01.jar"]
+ENTRYPOINT ["java", "-jar", "/app/review.jar"]
