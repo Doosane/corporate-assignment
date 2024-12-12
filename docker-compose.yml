@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: review_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql123123
+      MYSQL_DATABASE: review
+      MYSQL_USER: doosan
+      MYSQL_PASSWORD: doosan123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: review_app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/review
+      SPRING_DATASOURCE_USERNAME: baekdoosan
+      SPRING_DATASOURCE_PASSWORD: baekdoosan1234
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
