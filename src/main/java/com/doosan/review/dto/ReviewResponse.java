@@ -17,12 +17,17 @@ public class ReviewResponse {
     private long cursor;
     private List<ReviewDetail> reviews;
 
-    public ReviewResponse(long totalCount, double score, long cursor, List<Review> reviews) {
+    public ReviewResponse(long totalCount, double score, long cursor, List<ReviewDetail> reviews) {
         this.totalCount = totalCount;
         this.score = score;
         this.cursor = cursor;
-        this.reviews = reviews.stream()
-                .map(review -> new ReviewDetail(review))
-                .collect(Collectors.toList());
+        this.reviews = reviews;
     }
+
+
 }
+
+
+
+
+

@@ -18,12 +18,14 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/{productId}/reviews")
-    public ResponseEntity<ReviewResponse> getReviews(@PathVariable Long productId,
-                                                     @RequestParam(value = "cursor", required = false) Long cursor,
-                                                     @RequestParam(value = "size", defaultValue = "10") int size) {
-        ReviewResponse reviewResponse = reviewService.getReviews(productId, cursor, size);
-        return ResponseEntity.ok(reviewResponse);
+    @GetMapping("/{productId}")
+    public ResponseEntity<ReviewResponse> getReviews(
+            @PathVariable Long productId,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) Long cursor) {
+
+        ReviewResponse response = reviewService.getReviewsByProductId(productId, limit, cursor);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{productId}/reviews")
