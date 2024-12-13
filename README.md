@@ -4,6 +4,7 @@ https://github.com/Doosane/corporate-assignment/issues
 풀리퀘스트
 https://github.com/Doosane/corporate-assignment/pulls
 
+10만개 대용량 데이트 트래픽 
 ![image](https://github.com/user-attachments/assets/4e7b69df-d7be-457b-bbae-b80231d6fb81)
 
 
