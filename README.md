@@ -4,7 +4,7 @@ https://github.com/Doosane/corporate-assignment/issues
 풀리퀘스트
 https://github.com/Doosane/corporate-assignment/pulls
 
-10만개 대용량 데이트 트래픽 
+동시 10만개 대용량 데이터 저장 , 비관적 락을 이용한 정합성 체크
 ![image](https://github.com/user-attachments/assets/4e7b69df-d7be-457b-bbae-b80231d6fb81)
 
 
