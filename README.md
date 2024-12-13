@@ -1,3 +1,12 @@
+이슈 관리
+https://github.com/Doosane/corporate-assignment/issues
+
+풀리퀘스트
+https://github.com/Doosane/corporate-assignment/pulls
+
+![image](https://github.com/user-attachments/assets/4e7b69df-d7be-457b-bbae-b80231d6fb81)
+
+
 2024-12-13
 ### N + 1 오류 수정
 하나의 쿼리로 리뷰 목록을 가져온 뒤, 각 리뷰마다 개별적으로 연관 데이터를 조회하는 추가 쿼리가 실행되던 오류 수정
